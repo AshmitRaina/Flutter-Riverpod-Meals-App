@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/modals/meal.dart';
 import 'package:meals_app/screens/categories_screens.dart';
+import 'package:meals_app/screens/filter_screen.dart';
 import 'package:meals_app/screens/meals_screen.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 
@@ -14,10 +15,13 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   int _selectpageIndex = 0;
   //logic for fav. meals
-  void showSnackbar(String message ){
+  void showSnackbar(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
+
   final List<Meal> favoriteMeals = [];
   void _toggleMealsFavorites(Meal meal) {
     var isExisting = favoriteMeals.contains(meal);
@@ -30,7 +34,7 @@ class _TabScreenState extends State<TabScreen> {
       setState(() {
         favoriteMeals.add(meal);
       });
-       showSnackbar("Meal added to Favorites.");
+      showSnackbar("Meal added to Favorites.");
     }
   }
 
@@ -38,6 +42,15 @@ class _TabScreenState extends State<TabScreen> {
     setState(() {
       _selectpageIndex = index;
     });
+  }
+
+  void _onScreen(String identifier) {
+    Navigator.of(context).pop();
+    if (identifier == 'filters') {
+      Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (context) => const FilterScreen()));
+    } 
   }
 
   @override
@@ -54,7 +67,7 @@ class _TabScreenState extends State<TabScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(activePageTitle)),
       body: activePage,
-      drawer: const MainDrawer(),
+      drawer: MainDrawer(onSelectScreen: _onScreen),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectpageIndex,
         onTap: _selectPage,
