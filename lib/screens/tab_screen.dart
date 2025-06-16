@@ -44,13 +44,13 @@ class _TabScreenState extends State<TabScreen> {
     });
   }
 
-  void _onScreen(String identifier) {
+  void _onScreen(String identifier) async{
     Navigator.of(context).pop();
     if (identifier == 'filters') {
-      Navigator.of(
+      final result =await Navigator.of(
         context,
-      ).push(MaterialPageRoute(builder: (context) => const FilterScreen()));
-    } 
+      ).push<Map<Filters,bool>>(MaterialPageRoute(builder: (context) => const FilterScreen()));
+    }     
   }
 
   @override
