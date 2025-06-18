@@ -2,26 +2,29 @@ import 'package:flutter/material.dart';
 /* import 'package:meals_app/screens/tab_screen.dart';
 import 'package:meals_app/widgets/main_drawer.dart'; */
 
+enum Filters { glutenFree, lactoseFree, vegetarian, vegan }
 
-enum Filters{
-  glutenFree,
-  lactoseFree,
-  vegetarian,
-  vegan,
-}
 class FilterScreen extends StatefulWidget {
-  const FilterScreen({super.key});
+  const FilterScreen({super.key, required this.currentFilters});
+  final Map<Filters, bool> currentFilters;
 
   @override
   State<FilterScreen> createState() => _FilterScreenState();
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-
   var _glutenFreeFilterSet = false;
   var _lactoseFreeFilterSet = false;
   var _vegetarianFilterSet = false;
   var _veganFilterSet = false;
+  @override
+  void initState() {
+    super.initState();
+    _glutenFreeFilterSet = widget.currentFilters[Filters.glutenFree]!;
+    _lactoseFreeFilterSet = widget.currentFilters[Filters.lactoseFree]!;
+    _vegetarianFilterSet = widget.currentFilters[Filters.vegetarian]!;
+    _veganFilterSet = widget.currentFilters[Filters.vegan]!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +43,17 @@ class _FilterScreenState extends State<FilterScreen> {
       body: PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {
-          if(didPop)return;
+          if (didPop) return;
           Navigator.of(context).pop({
-            Filters.glutenFree:_glutenFreeFilterSet,
-            Filters.lactoseFree:_lactoseFreeFilterSet,
-            Filters.vegetarian:_vegetarianFilterSet,
-            Filters.vegan:_veganFilterSet,
+            Filters.glutenFree: _glutenFreeFilterSet,
+            Filters.lactoseFree: _lactoseFreeFilterSet,
+            Filters.vegetarian: _vegetarianFilterSet,
+            Filters.vegan: _veganFilterSet,
           });
         },
         child: Column(
           children: [
-            //gluten free switch 
+            //gluten free switch
             SwitchListTile(
               value: _glutenFreeFilterSet,
               onChanged: (value) {
@@ -72,7 +75,7 @@ class _FilterScreenState extends State<FilterScreen> {
               ),
               contentPadding: const EdgeInsets.only(left: 34, right: 22),
             ),
-            //lactose free switch 
+            //lactose free switch
             SwitchListTile(
               value: _lactoseFreeFilterSet,
               onChanged: (value) {
@@ -94,7 +97,7 @@ class _FilterScreenState extends State<FilterScreen> {
               ),
               contentPadding: const EdgeInsets.only(left: 34, right: 22),
             ),
-            //vegetarian switch 
+            //vegetarian switch
             SwitchListTile(
               value: _vegetarianFilterSet,
               onChanged: (value) {

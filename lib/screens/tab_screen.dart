@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/data/dummy_data.dart';
 import 'package:meals_app/modals/meal.dart';
 import 'package:meals_app/screens/categories_screens.dart';
 import 'package:meals_app/screens/filter_screen.dart';
 import 'package:meals_app/screens/meals_screen.dart';
 import 'package:meals_app/widgets/main_drawer.dart';
 
+const kInitialFilters ={
+    Filters.glutenFree:false,
+    Filters.lactoseFree:false,
+    Filters.vegetarian:false,
+    Filters.vegan:false,
+
+  };
 class TabScreen extends StatefulWidget {
   const TabScreen({super.key});
 
@@ -13,6 +21,9 @@ class TabScreen extends StatefulWidget {
 }
 
 class _TabScreenState extends State<TabScreen> {
+
+   Map <Filters,bool>_selectedFilters =kInitialFilters;
+
   int _selectpageIndex = 0;
   //logic for fav. meals
   void showSnackbar(String message) {
@@ -45,17 +56,39 @@ class _TabScreenState extends State<TabScreen> {
   }
 
   void _onScreen(String identifier) async{
+
+   
     Navigator.of(context).pop();
     if (identifier == 'filters') {
       final result =await Navigator.of(
         context,
-      ).push<Map<Filters,bool>>(MaterialPageRoute(builder: (context) => const FilterScreen()));
+      ).push<Map<Filters,bool>>(MaterialPageRoute(builder: (context) =>  FilterScreen(currentFilters: _selectedFilters,)));
+      setState(() {
+        _selectedFilters= result ?? kInitialFilters;
+      });
+      
     }     
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget activePage = CategoriesScreens(selectedFav: _toggleMealsFavorites);
+
+     final availableMeals =dummyMeals.where((meal){
+      if(_selectedFilters[Filters.glutenFree]! && !meal.isGlutenFree){
+        return false;
+      }
+      if(_selectedFilters[Filters.lactoseFree]! && !meal.isLactoseFree){
+        return false;
+      }
+      if(_selectedFilters[Filters.vegetarian]! && !meal.isVegetarian){
+        return false;
+      }
+      if(_selectedFilters[Filters.vegan]! && !meal.isVegan){
+        return false;
+      }
+      return true;
+    },).toList();
+    Widget activePage = CategoriesScreens(selectedFav: _toggleMealsFavorites,availableMeals: availableMeals,);
     var activePageTitle = "Categories";
     if (_selectpageIndex == 1) {
       activePageTitle = "Your Favorites";
