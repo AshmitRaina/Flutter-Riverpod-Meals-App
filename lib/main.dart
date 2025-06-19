@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; //riverpod package
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meals_app/screens/tab_screen.dart';
 
@@ -14,7 +15,12 @@ final theme = ThemeData(
 );
 void main() {
   runApp(
-    DevicePreview(enabled: !kReleaseMode, builder: (context) => const App()),
+    ProviderScope(
+      child: DevicePreview(
+        enabled: !kReleaseMode,
+        builder: (context) => const App(),
+      ),
+    ),
   );
 }
 
